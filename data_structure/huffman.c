@@ -22,7 +22,7 @@ struct HeapStruct{
 HuffmanTree NewNode( int data){
     HuffmanTree TN;
 
-    TN = (HuffmanTree)malloc(sizeof( struct TreeNode));
+    TN = (HuffmanTree)malloc(sizeof(struct TreeNode));
     TN->Left = TN->Right = NULL;
 
     TN->Weight = data;
@@ -130,17 +130,17 @@ void BuildMinHeap( MinHeap H, int *nums){
     HuffmanTree temp;
     
 
-    for( i = 0; i < H->Capacity/2; i++){
+    for( i = 0; i < H->Capacity; i++){
         temp = NewNode(nums[i]);
 
         H->Elements[i+1] = temp;
         H->Size++;
-    }
+    }//给堆赋值
 
     for (i = H->Size/2; i > 0; i--){
         PercDown(H,i);
 
-    }
+    }//给堆排序
     
 }
 
@@ -156,10 +156,12 @@ void PrintHeap( MinHeap H){
 
 HuffmanTree Huffman(MinHeap H, int* num){
 
-    int i;
+    int i,n;
     HuffmanTree T;
+    n = H->Size;
 
-    for( i = 1; i < H->Size; i++){
+
+    for( i = 1; i < n; i++){
         T = NewNode(0);
         T->Left = DeleteMin(H);
         T->Right = DeleteMin(H);
@@ -189,18 +191,32 @@ void PreOrderTraversal(HuffmanTree BST){
 void main(){
 
     MinHeap H;
-    HuffmanTree T;
+    HuffmanTree T,t;
+    int i;
 
     int nums[4] = {1,5,2,6};
 
     
-    H = CreatMinHeap(4*2);
+    H = CreatMinHeap(4);
     BuildMinHeap(H,nums);
     PrintHeap(H);
     //printf("---删除元素---\n%d\n ",DeleteMin(H)->Right);
     //PrintHeap(H);
     T = Huffman(H,nums);
-    printf("---先序遍历---");
+    /*
+
+    for(i = 1; i < H->Size; i++){
+        T = NewNode(0);
+        T->Left = DeleteMin(H);
+        T->Right = DeleteMin(H);
+        T->Weight = T->Right->Weight + T->Left->Weight;
+        printf("i:%d weight:%d\n",i,T->Weight);
+        Insert(H,T);
+    }
+    T = DeleteMin(H);
+    PrintHeap(H);*/
+    
+    printf("---先序遍历树---\n");
     PreOrderTraversal(T);
 
 

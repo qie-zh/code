@@ -121,7 +121,8 @@ BuildMinHeap( H );  //将H->data[]按权值调整为最小堆
 
 /*此处必须将H->Size的值交给num,因为后面做DeleteMin()和 Insert()函数会改变H->Size的值*/
 
-n = H->Size;     
+n = H->Size;
+printf("%d",n);     
 
 for(i=1; i<n; i++){  //做 H->Size-1次合并
 
