@@ -1,4 +1,4 @@
-//建立最小堆(链表)和哈夫曼树
+//建立最小堆(链表)和哈夫曼树,包含最小堆的遍历，插入，删除，计算哈夫曼树的wpl函数
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -188,13 +188,22 @@ void PreOrderTraversal(HuffmanTree BST){
     }
 }
 
+int WPL(HuffmanTree T, int Depth){
+    if(!(T->Left) && !(T->Right)){  //不存在左右子树
+        return Depth*T->Weight;
+    }
+    else{
+        return (WPL(T->Right,Depth+1) +WPL(T->Left,Depth+1));
+    }
+}
+
 void main(){
 
     MinHeap H;
     HuffmanTree T,t;
     int i;
 
-    int nums[4] = {1,5,2,6};
+    int nums[4] = {4 , 6 , 7, 2};
 
     
     H = CreatMinHeap(4);
@@ -203,9 +212,8 @@ void main(){
     //printf("---删除元素---\n%d\n ",DeleteMin(H)->Right);
     //PrintHeap(H);
     T = Huffman(H,nums);
-    /*
 
-    for(i = 1; i < H->Size; i++){
+    /*for(i = 1; i < H->Size; i++){
         T = NewNode(0);
         T->Left = DeleteMin(H);
         T->Right = DeleteMin(H);
@@ -219,6 +227,6 @@ void main(){
     printf("---先序遍历树---\n");
     PreOrderTraversal(T);
 
+    printf("\nWPL:%d ",WPL(T,0));
 
-    
 }
