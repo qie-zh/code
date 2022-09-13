@@ -1,12 +1,14 @@
-//邻接表的建立
+//邻接表的建立，并使用DFS遍历整棵树
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MaxVertexNum 20
-typedef int WeightType
-typedef int DataType
-typedef int Vertex
+typedef int WeightType;
+typedef int DataType;
+typedef int Vertex;
 
+int Visited[MaxVertexNum];
 
 //边的定义
 typedef struct ENode *PtrToENode;
@@ -50,7 +52,7 @@ LGraph CreatGraph(int VertexNum){ //有顶点但是没有边的图
 
     Graph = (LGraph)malloc(sizeof(struct GNodeList));
     Graph->Ne = 0;
-    Graph->Nv = Vertex;
+    Graph->Nv = VertexNum;
 
     for(V = 0; V < Graph->Nv; V++){
         Graph->G[V].FirstEdge = NULL;
@@ -83,23 +85,64 @@ LGraph BuildGraph(){
     Vertex V;
     int Nv,i;
 
+    printf("输入顶点个数：");
     scanf("%d",&Nv);
     Graph = CreatGraph(Nv);
 
+    printf("输入边个数：");
     scanf("%d",&(Graph->Ne));
+
     if(Graph->Ne != 0){
         E = (Edge)malloc(sizeof(struct ENode));
         for( i = 0; i < Graph->Ne; i++){
+            printf("输入第%d条边：",i+1);
             scanf("%d %d %d",&(E->V1),&(E->V2),&(E->Weight));
             InsertEdge(Graph,E);
         }
     }
 
     //如果有顶点数据
+    /*
     for(V = 0; V <Graph->Nv; V++){
 
         scanf("%d",&(Graph->G[V].Data));
-    }
+    }*/
 
     return Graph;
+}
+
+void Visit(Vertex V){
+    printf("%d ",V);
+}
+
+void DFS(LGraph Graph,Vertex V){
+
+    PtrToAdjVNode W;
+
+    Visit(V);
+    Visited[V] = 1;
+
+    for(W = Graph->G[V].FirstEdge; W; W = W->Next){
+        if( !Visited[W->AdjV]){
+            DFS(Graph,W->AdjV);
+
+        }
+    }
+
+}
+
+int main(){
+
+    for(int i = 0; i < MaxVertexNum; i++){
+        Visited[i] = 0;
+    }
+
+    LGraph G;
+
+    G = BuildGraph();
+
+    DFS(G,0);
+
+
+    return 0;
 }

@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 #define MaxVertexNum 20
-typedef int WeightType
-typedef int DataType
-typedef int Vertex
+typedef int WeightType;
+typedef int DataType;
+typedef int Vertex;
 
 
 //邻接图节点定义
@@ -29,7 +29,7 @@ struct ENode{
 typedef PtrToENode Edge;
 
 
-
+//初始化图，顶点数据置0
 MGraph CreatGraph(int VertexNum){
 
     Vertex V,W;
@@ -49,6 +49,7 @@ MGraph CreatGraph(int VertexNum){
 
 }
 
+//把边插入图中
 void InsertEdge( MGraph Graph, Edge E){
     
     //有向图
@@ -64,17 +65,21 @@ MGraph BUildGraph(){
     Edge E;
     Vertex V;
 
+    printf("输入顶点个数：\n");
+    scanf("%d",&Nv);                //获取顶点数
+    Graph = CreatGraph(Nv);         //创建n个顶点的图
 
+    printf("输入边的个数：\n");
+    scanf("%d",&Graph->Ne);          //获取边的个数
 
-    scanf("%d",&Nv);
-    Graph = CreatGraph(Nv);
-    scanf("%d",Graph->Ne);
     if(Graph->Ne != 0){
         E = (Edge)malloc(sizeof(struct ENode));
         for(int i = 0; i < Graph->Ne; i++){
+            printf("输入第%d条边：\n",i+1);
             scanf("%d %d %d",&E->V1,&E->V2,&E->Weight);
-            InsertEdge(Graph,E)
+            InsertEdge(Graph,E);
         }
+        
     }
 
     //如果顶点有数据
@@ -87,6 +92,13 @@ MGraph BUildGraph(){
 }
 
 
+void main(){
+
+    MGraph G;
+
+    G = BUildGraph();
+
+}
 
 
 
