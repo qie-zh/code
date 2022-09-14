@@ -102,11 +102,11 @@ LGraph BuildGraph(){
     }
 
     //如果有顶点数据
-    /*
+    
     for(V = 0; V <Graph->Nv; V++){
-
+        printf("输入第%d顶点",V+1);
         scanf("%d",&(Graph->G[V].Data));
-    }*/
+    }/**/
 
     return Graph;
 }

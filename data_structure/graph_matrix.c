@@ -1,12 +1,18 @@
-//图矩阵的建立，遍历
+//图矩阵、队列的建立，利用BFS遍历树。
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
 
 #define MaxVertexNum 20
+#define MaxQueueNum 10
+#define INFINTY 100
 typedef int WeightType;
 typedef int DataType;
 typedef int Vertex;
+
+bool Visited[MaxVertexNum];//保存顶点的访问状态
 
 
 //邻接图节点定义
@@ -41,7 +47,7 @@ MGraph CreatGraph(int VertexNum){
 
     for(V = 0; V < Graph->Nv; V++){
         for (W = 0; W < Graph->Nv; W++){
-            Graph->G[V][W] = 0;
+            Graph->G[V][W] = INFINTY;
         }
         
     }
@@ -59,6 +65,7 @@ void InsertEdge( MGraph Graph, Edge E){
 
 }
 
+//建造图
 MGraph BUildGraph(){
     MGraph Graph;
     int Nv, i;
@@ -75,9 +82,11 @@ MGraph BUildGraph(){
     if(Graph->Ne != 0){
         E = (Edge)malloc(sizeof(struct ENode));
         for(int i = 0; i < Graph->Ne; i++){
+
             printf("输入第%d条边：\n",i+1);
             scanf("%d %d %d",&E->V1,&E->V2,&E->Weight);
             InsertEdge(Graph,E);
+            
         }
         
     }
@@ -91,13 +100,127 @@ MGraph BUildGraph(){
     return Graph;
 }
 
+//队列的定义
+typedef struct QueueNode *queue;
+struct QueueNode
+{
+    int Data[MaxQueueNum];
+    int rear;     //最后一个元素
+    int front;    //第一个元素
+};
 
-void main(){
+//初始化队列
+queue CreatQueue(){
+
+    queue Q;
+
+    Q = (queue)malloc(sizeof(struct QueueNode));
+    Q->front = Q->rear = -1;
+    return Q;
+
+}
+
+//进队
+void AddQueue(queue Q, int x){
+    if((Q->rear + 1) % MaxQueueNum == Q->front % MaxQueueNum){
+        printf("full\n");
+        return;
+    }
+
+    Q->rear = ++Q->rear % MaxQueueNum;
+    Q->Data[Q->rear] = x;
+    
+}
+
+//出队
+int DeleQueue(queue Q){
+    int x = -1;
+    if(Q->rear % MaxQueueNum == Q->front % MaxQueueNum){
+        printf("empty");
+    }
+    else{
+        Q->front = ++Q->front % MaxQueueNum;
+        x = Q->Data[Q->front];
+        
+    }
+    return x;
+}
+
+/*-------------------操作相关-----------------*/
+//判断是否存在边
+bool IsEdge(MGraph G, Vertex V, Vertex M){
+    return G->G[V][M] < INFINTY ? true : false;
+}
+
+//访问点
+void visit(Vertex V){
+    printf("%d ",V);
+    Visited[V] = true;
+}
+
+//BFS的实现
+void BFS(MGraph G, Vertex S){
+    queue Q;
+    Vertex V,W;
+
+    Q = CreatQueue();
+    visit(S);
+    AddQueue(Q,S);
+
+    while( !(Q->rear % MaxQueueNum == Q->front % MaxQueueNum) ){
+        V = DeleQueue(Q);
+        for( W = 0; W < G->Nv; W++){
+            if( !Visited[W] && IsEdge(G,V,W)){
+                visit(W);
+                AddQueue(Q,W);
+            }
+        }
+    }
+    
+}
+
+
+
+int main(){
+
+    //初始化visited数组
+    for( int i = 0; i < MaxVertexNum; i++){
+        Visited[i] = false;
+    }
 
     MGraph G;
 
     G = BUildGraph();
 
+    BFS(G,0);
+
+
+
+    //MGraph G;
+
+    //G = BUildGraph();
+
+    /*queue Q;
+    Q = CreatQueue();
+
+    AddQueue(Q,2);
+    AddQueue(Q,6);
+    printf("%d\n",DeleQueue(Q));
+    printf("%d\n",DeleQueue(Q));
+    printf("%d\n",DeleQueue(Q));
+    AddQueue(Q,8);
+    AddQueue(Q,3);
+    AddQueue(Q,7);
+    AddQueue(Q,9);
+    AddQueue(Q,1);
+    printf("%d\n",DeleQueue(Q));*/
+
+
+
+
+
+
+    return 0;
 }
 
 
