@@ -8,7 +8,7 @@
             "name": "(gdb) 启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/huffman.exe",
+            "program": "${fileDirname}/graph_matrix.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

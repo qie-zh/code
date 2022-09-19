@@ -1,14 +1,22 @@
-//邻接表的建立，并使用DFS遍历整棵树
+//邻接表的建立，并使用DFS遍历整棵树,有权图的最短路径Dijkstra
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define MaxVertexNum 20
+#define INFINITY 100
+#define error -100
+
 typedef int WeightType;
 typedef int DataType;
 typedef int Vertex;
 
 int Visited[MaxVertexNum];
+bool collected[MaxVertexNum];    //储存被访问过顶点的集合
+WeightType dist[MaxVertexNum];  //最短距离
+WeightType path[MaxVertexNum]; //经过的顶点
+
 
 //边的定义
 typedef struct ENode *PtrToENode;
@@ -103,10 +111,10 @@ LGraph BuildGraph(){
 
     //如果有顶点数据
     
-    for(V = 0; V <Graph->Nv; V++){
+   /*for(V = 0; V <Graph->Nv; V++){
         printf("输入第%d顶点",V+1);
         scanf("%d",&(Graph->G[V].Data));
-    }/**/
+    }*/
 
     return Graph;
 }
@@ -115,6 +123,9 @@ void Visit(Vertex V){
     printf("%d ",V);
 }
 
+
+
+//深度优先搜索
 void DFS(LGraph Graph,Vertex V){
 
     PtrToAdjVNode W;
@@ -131,10 +142,50 @@ void DFS(LGraph Graph,Vertex V){
 
 }
 
+/*-------------------------有权图的最短路径------------------------*/
+
+//寻找访问集合之外的最小顶点
+Vertex FindMinDist(LGraph G){
+
+    Vertex MinV,V;
+    int MinDist = INFINITY;
+
+    for(V = 0; V < G->Nv; V++){
+        if( collected[V] = false && dist[V] < MinDist){ //未被访问且
+            MinDist = dist[V];
+            MinV = V;
+        }
+    }
+
+    if( MinDist < INFINITY){
+        return MinV;
+    }
+    else{
+        return error;
+    }
+
+}
+
+//最短路径算法
+bool Dijksra(LGraph G,Vertex S){
+
+    Vertex V,M;
+    PtrToAdjVNode W;
+
+    for(W = G->G[V]; V < G->Nv; V++){
+        dist[V] = 
+    }
+}
+
+
 int main(){
 
+    //初始化数组
     for(int i = 0; i < MaxVertexNum; i++){
         Visited[i] = 0;
+        dist[i] = INFINITY;
+        path[i] = -1;
+        collected[i] = false;
     }
 
     LGraph G;

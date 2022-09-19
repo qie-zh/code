@@ -1,4 +1,4 @@
-//图矩阵、队列的建立，利用BFS遍历树。
+//图矩阵、队列的建立，利用BFS遍历树，无权图的最短路径算法（类似bsf）。
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +13,8 @@ typedef int DataType;
 typedef int Vertex;
 
 bool Visited[MaxVertexNum];//保存顶点的访问状态
+WeightType dist[MaxVertexNum];  //最短距离
+WeightType path[MaxVertexNum]; //经过的顶点
 
 
 //邻接图节点定义
@@ -49,7 +51,6 @@ MGraph CreatGraph(int VertexNum){
         for (W = 0; W < Graph->Nv; W++){
             Graph->G[V][W] = INFINTY;
         }
-        
     }
     return Graph;
 
@@ -180,12 +181,62 @@ void BFS(MGraph G, Vertex S){
 }
 
 
+/*------------------无权图的最短路径-----------------*/
+void Unweighted( Vertex S, MGraph G){
+    queue Q;
+    Vertex V,W;
+
+    Q = CreatQueue();
+    AddQueue(Q,S);
+    while( !(Q->rear%MaxQueueNum == Q->front%MaxQueueNum) ){
+        V = DeleQueue(Q);
+        for(W = 0; W < G->Nv; W++){
+            if(dist[W] == -1 && IsEdge(G,V,W)){
+                dist[W] = dist[V] + 1;
+                path[W] = V;
+                AddQueue(Q,W);
+            }
+        }
+    }
+}
+
+void print_path_dist(MGraph G){
+
+    for (int i = 0; i < G->Nv; i++){
+
+        printf("%d %d \n",dist[i], path[i]);
+
+    }
+    
+}
+
+void print_route(MGraph G, Vertex x,Vertex V){
+
+    if(V != x){
+        printf("%d->",V);
+        print_route(G,x,path[V]);
+    }
+    else{
+        printf("%d",x);
+    }
+    
+}
+
+/*---------------有权图的最短路径------------------*/
+
+
+
+
 
 int main(){
 
     //初始化visited数组
     for( int i = 0; i < MaxVertexNum; i++){
+
         Visited[i] = false;
+        path[i] = -1;
+        dist[i] = -1;
+
     }
 
     MGraph G;
@@ -193,31 +244,24 @@ int main(){
     G = BUildGraph();
 
     BFS(G,0);
+    printf("\n");
 
+    int x;                  //原点
+    printf("输入原点：\n");
+    scanf("%d",&x);
+    dist[x] = 0;
 
+    //print_path_dist(G);
 
-    //MGraph G;
+    Unweighted(x,G);
 
-    //G = BUildGraph();
+    print_path_dist(G);
 
-    /*queue Q;
-    Q = CreatQueue();
+    int V;               //查找点
+    printf("输入要查找的节点：\n");
+    scanf("%d",&V);
 
-    AddQueue(Q,2);
-    AddQueue(Q,6);
-    printf("%d\n",DeleQueue(Q));
-    printf("%d\n",DeleQueue(Q));
-    printf("%d\n",DeleQueue(Q));
-    AddQueue(Q,8);
-    AddQueue(Q,3);
-    AddQueue(Q,7);
-    AddQueue(Q,9);
-    AddQueue(Q,1);
-    printf("%d\n",DeleQueue(Q));*/
-
-
-
-
+    print_route(G,x,V);
 
 
     return 0;
