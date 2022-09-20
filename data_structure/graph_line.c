@@ -53,8 +53,8 @@ struct GNodeList{
 typedef PtrToGNodeList LGraph;
 
 
-
-LGraph CreatGraph(int VertexNum){ //有顶点但是没有边的图
+//有顶点但是没有边的图
+LGraph CreatGraph(int VertexNum){ 
     Vertex V,W;
     LGraph Graph;
 
@@ -68,6 +68,7 @@ LGraph CreatGraph(int VertexNum){ //有顶点但是没有边的图
     return Graph;
 }
 
+//插入边
 void InsertEdge(LGraph Graph, Edge E){
     PtrToAdjVNode NewNode;
 
@@ -93,18 +94,29 @@ LGraph BuildGraph(){
     Vertex V;
     int Nv,i;
 
-    printf("输入顶点个数：");
-    scanf("%d",&Nv);
+
+    int Vnums[5] =  {0,0,1,2,3};
+    int Wnums[5] =  {1,2,3,3,0};
+    int Weight[5] = {1,2,1,3,2};
+
+    //printf("输入顶点个数：");
+    //scanf("%d",&Nv);
+    Nv = 4;
     Graph = CreatGraph(Nv);
 
-    printf("输入边个数：");
-    scanf("%d",&(Graph->Ne));
+    //printf("输入边个数：");
+    //scanf("%d",&(Graph->Ne));
+    Graph->Ne = 5;
 
     if(Graph->Ne != 0){
         E = (Edge)malloc(sizeof(struct ENode));
         for( i = 0; i < Graph->Ne; i++){
-            printf("输入第%d条边：",i+1);
-            scanf("%d %d %d",&(E->V1),&(E->V2),&(E->Weight));
+            //printf("输入第%d条边：",i+1);
+            //scanf("%d %d %d",&(E->V1),&(E->V2),&(E->Weight));
+
+            E->V1 = Vnums[i];
+            E->V2 = Wnums[i];
+            E->Weight = Weight[i];
             InsertEdge(Graph,E);
         }
     }
@@ -119,11 +131,10 @@ LGraph BuildGraph(){
     return Graph;
 }
 
+//顶点没存数据，打印数组中的位置
 void Visit(Vertex V){
     printf("%d ",V);
 }
-
-
 
 //深度优先搜索
 void DFS(LGraph Graph,Vertex V){
@@ -151,7 +162,7 @@ Vertex FindMinDist(LGraph G){
     int MinDist = INFINITY;
 
     for(V = 0; V < G->Nv; V++){
-        if( collected[V] = false && dist[V] < MinDist){ //未被访问且
+        if( collected[V] == false && dist[V] < MinDist){ //未被访问且权值较小者
             MinDist = dist[V];
             MinV = V;
         }
@@ -172,10 +183,11 @@ bool Dijksra(LGraph G,Vertex S){
     Vertex V,M;
     PtrToAdjVNode W;
 
-    for(W = G->G[V]; V < G->Nv; V++){
-        dist[V] = 
+    for(W = G->G[V].FirstEdge; W; W = W->Next){
+        //dist[V] = 
     }
 }
+
 
 
 int main(){
@@ -193,6 +205,30 @@ int main(){
     G = BuildGraph();
 
     DFS(G,0);
+
+    //获取原点并将最近的顶点权值放入数组
+    int x;
+    PtrToAdjVNode W;
+    printf("输入原点：");
+    scanf("%d",&x);
+    dist[x] = 0;
+    collected[x] = true;
+    for(W = G->G[x].FirstEdge; W; W = W->Next){
+
+        dist[W->AdjV] = W->Weight;
+        //collected[W->AdjV] = true;
+        
+    }
+
+    //Dijksra(G,x);
+    printf("%d\n", FindMinDist(G));
+
+    /*for(int i = 0; i < MaxVertexNum; i++){
+        printf("%d ",dist[i]);
+    }*/
+    
+
+
 
 
     return 0;
