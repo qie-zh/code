@@ -181,7 +181,7 @@ Vertex FindMinDist(LGraph G){
 bool Dijksra(LGraph G,Vertex S){
 
 
-    Vertex V,M;
+    Vertex V;
     PtrToAdjVNode W;
 
     //把顶点放入数组
@@ -195,17 +195,43 @@ bool Dijksra(LGraph G,Vertex S){
             path[W->AdjV] = S;
         }
         else{
-            path[W->AdjV] = S;
+            path[W->AdjV] = -1;
         }
     }
 
-    
+    while(1){
 
-    return false;
+        V = FindMinDist(G);
+
+        if(V == error){
+            break;;
+        }
+        collected[V] = true;
+        for(W = G->G[S].FirstEdge; W; W = W->Next){
+            if( collected[W->AdjV] == false && W->Weight < INFINITY){
+                if(W->Weight + dist[V] < dist[W->AdjV]){
+                    dist[W->AdjV] = dist[V] + W->Weight;
+                    path[W->AdjV] = V;
+                }
+            }
+        }
+    }
+
+    return true;
 
 }
 
+void print_route(Vertex W, Vertex S){
+    
+    if(W != S){
+        printf("%d->",W);
+        print_route(S,path[W]);
+    }
+    else{
+        printf("%d",S);
+    }
 
+}
 
 int main(){
 
@@ -222,20 +248,20 @@ int main(){
 
     DFS(G,0);
 
-    //获取原点并将最近的顶点权值放入数组
+    //获取原点并将最小的顶点权值放入数组
     int S;
-    PtrToAdjVNode W;
     printf("输入原点：");
     scanf("%d",&S);
     
-    //Dijksra(G,S);
+    Dijksra(G,S);
+
+    Vertex V;
+    printf("输入要查询路径的顶点：");
+    scanf("%d",&V);
+
+    print_route(V,S);
 
 
-    printf("%d\n", FindMinDist(G));
-
-    /*for(int i = 0; i < MaxVertexNum; i++){
-        printf("%d ",dist[i]);
-    }*/
     
 
 
