@@ -13,7 +13,7 @@ typedef int DataType;
 typedef int Vertex;
 
 int Visited[MaxVertexNum];
-bool collected[MaxVertexNum];    //储存被访问过顶点的集合
+bool collected[MaxVertexNum];    //记录已被访问过的顶点
 WeightType dist[MaxVertexNum];  //最短距离
 WeightType path[MaxVertexNum]; //经过的顶点
 
@@ -180,12 +180,29 @@ Vertex FindMinDist(LGraph G){
 //最短路径算法
 bool Dijksra(LGraph G,Vertex S){
 
+
     Vertex V,M;
     PtrToAdjVNode W;
 
-    for(W = G->G[V].FirstEdge; W; W = W->Next){
-        //dist[V] = 
+    //把顶点放入数组
+    dist[S] = 0;
+    collected[S] = true;
+
+    //初始化数组
+    for(W = G->G[S].FirstEdge; W; W = W->Next){
+        dist[W->AdjV] = W->Weight;
+        if( dist[W->AdjV] < INFINITY ){
+            path[W->AdjV] = S;
+        }
+        else{
+            path[W->AdjV] = S;
+        }
     }
+
+    
+
+    return false;
+
 }
 
 
@@ -196,7 +213,6 @@ int main(){
     for(int i = 0; i < MaxVertexNum; i++){
         Visited[i] = 0;
         dist[i] = INFINITY;
-        path[i] = -1;
         collected[i] = false;
     }
 
@@ -207,20 +223,14 @@ int main(){
     DFS(G,0);
 
     //获取原点并将最近的顶点权值放入数组
-    int x;
+    int S;
     PtrToAdjVNode W;
     printf("输入原点：");
-    scanf("%d",&x);
-    dist[x] = 0;
-    collected[x] = true;
-    for(W = G->G[x].FirstEdge; W; W = W->Next){
+    scanf("%d",&S);
+    
+    //Dijksra(G,S);
 
-        dist[W->AdjV] = W->Weight;
-        //collected[W->AdjV] = true;
-        
-    }
 
-    //Dijksra(G,x);
     printf("%d\n", FindMinDist(G));
 
     /*for(int i = 0; i < MaxVertexNum; i++){
