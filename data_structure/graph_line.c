@@ -210,11 +210,8 @@ bool Dijksra(LGraph G,Vertex S){
             break;
         }
         collected[V] = true;
-        for(W = G->G[S].FirstEdge; S < G->Nv; W = W->Next){
-            if( !W){
-                W = G->G[++S].FirstEdge;
-                continue;
-            }
+        for(W = G->G[V].FirstEdge; W; W = W->Next){
+
             if( collected[W->AdjV] == false && W->Weight < INFINITY){
                 if(W->Weight + dist[V] < dist[W->AdjV]){
                     dist[W->AdjV] = dist[V] + W->Weight;
