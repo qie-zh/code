@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MaxVertexNum 20
+#define MaxVertexNum 10
 #define INFINITY 100
 #define error -100
 
@@ -95,18 +95,21 @@ LGraph BuildGraph(){
     int Nv,i;
 
 
-    int Vnums[5] =  {0,0,1,2,3};
-    int Wnums[5] =  {1,2,3,3,0};
-    int Weight[5] = {1,2,1,3,2};
+    int Vnums[6] =  {0,0,1,1,4,4};
+    int Wnums[6] =  {1,4,4,2,2,3};
+    int Weight[6] = {1,3,1,5,1,2};
+    Nv = 5;
+    Graph = CreatGraph(Nv);
+    Graph->Ne = 6;/*//测试用数据*/
 
-    //printf("输入顶点个数：");
-    //scanf("%d",&Nv);
-    Nv = 4;
+    /*
+    printf("输入顶点个数：");
+    scanf("%d",&Nv);
     Graph = CreatGraph(Nv);
 
-    //printf("输入边个数：");
-    //scanf("%d",&(Graph->Ne));
-    Graph->Ne = 5;
+    printf("输入边个数：");
+    scanf("%d",&(Graph->Ne));*/
+    
 
     if(Graph->Ne != 0){
         E = (Edge)malloc(sizeof(struct ENode));
@@ -116,7 +119,7 @@ LGraph BuildGraph(){
 
             E->V1 = Vnums[i];
             E->V2 = Wnums[i];
-            E->Weight = Weight[i];
+            E->Weight = Weight[i];/*//测试用数据*/
             InsertEdge(Graph,E);
         }
     }
@@ -131,6 +134,8 @@ LGraph BuildGraph(){
     return Graph;
 }
 
+
+/*-----------------深度优先搜索--------------------*/
 //顶点没存数据，打印数组中的位置
 void Visit(Vertex V){
     printf("%d ",V);
@@ -152,6 +157,7 @@ void DFS(LGraph Graph,Vertex V){
     }
 
 }
+
 
 /*-------------------------有权图的最短路径------------------------*/
 
@@ -181,21 +187,18 @@ Vertex FindMinDist(LGraph G){
 bool Dijksra(LGraph G,Vertex S){
 
 
-    Vertex V;
+    Vertex V,M;
     PtrToAdjVNode W;
 
     //把顶点放入数组
     dist[S] = 0;
     collected[S] = true;
 
-    //初始化数组
-    for(W = G->G[S].FirstEdge; W; W = W->Next){
+    //初始化数组.
+    for(W = G->G->FirstEdge; W; W = W->Next){
         dist[W->AdjV] = W->Weight;
         if( dist[W->AdjV] < INFINITY ){
             path[W->AdjV] = S;
-        }
-        else{
-            path[W->AdjV] = -1;
         }
     }
 
@@ -204,16 +207,21 @@ bool Dijksra(LGraph G,Vertex S){
         V = FindMinDist(G);
 
         if(V == error){
-            break;;
+            break;
         }
         collected[V] = true;
-        for(W = G->G[S].FirstEdge; W; W = W->Next){
+        for(W = G->G[S].FirstEdge; S < G->Nv; W = W->Next){
+            if( !W){
+                W = G->G[++S].FirstEdge;
+                continue;
+            }
             if( collected[W->AdjV] == false && W->Weight < INFINITY){
                 if(W->Weight + dist[V] < dist[W->AdjV]){
                     dist[W->AdjV] = dist[V] + W->Weight;
                     path[W->AdjV] = V;
                 }
             }
+            
         }
     }
 
@@ -221,14 +229,15 @@ bool Dijksra(LGraph G,Vertex S){
 
 }
 
+//S是原点，W是查询路径的顶点
 void print_route(Vertex W, Vertex S){
     
     if(W != S){
         printf("%d->",W);
-        print_route(S,path[W]);
+        print_route(path[W],S);
     }
     else{
-        printf("%d",S);
+        printf("%d\n",S);
     }
 
 }
@@ -240,7 +249,9 @@ int main(){
         Visited[i] = 0;
         dist[i] = INFINITY;
         collected[i] = false;
+        path[i] = -1;
     }
+    
 
     LGraph G;
 
@@ -248,11 +259,12 @@ int main(){
 
     DFS(G,0);
 
-    //获取原点并将最小的顶点权值放入数组
+    //输入原点
     int S;
     printf("输入原点：");
     scanf("%d",&S);
     
+    //设置dist和path数组
     Dijksra(G,S);
 
     Vertex V;
@@ -260,10 +272,6 @@ int main(){
     scanf("%d",&V);
 
     print_route(V,S);
-
-
-    
-
 
 
 
